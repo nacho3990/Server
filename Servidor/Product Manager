@@ -1,0 +1,73 @@
+class ProductManager {
+  constructor() {
+    this.products = [];
+  }
+
+  generateUniqueId() {
+
+    return this.products.length + 1;
+  }
+
+  getProducts() {
+    return this.products;
+  }
+
+  addProduct({ title, description, price, thumbnail, code, stock }) {
+    const id = this.generateUniqueId();
+    const product = { id, title, description, price, thumbnail, code, stock };
+    this.products.push(product);
+    return product;
+  }
+
+  getProductById(id) {
+    const product = this.products.find((p) => p.id === id);
+    if (!product) {
+      throw new Error("Producto no encontrado");
+    }
+    return product;
+  }
+
+  updateProduct(id, updatedFields) {
+    const index = this.products.findIndex((p) => p.id === id);
+    if (index === -1) {
+      throw new Error("Producto no encontrado");
+    }
+
+    updatedFields.id = id;
+    this.products[index] = { ...this.products[index], ...updatedFields };
+
+    return this.products[index];
+  }
+
+  deleteProduct(id) {
+    const index = this.products.findIndex((p) => p.id === id);
+    if (index === -1) {
+      throw new Error("Producto no encontrado");
+    }
+
+    const deletedProduct = this.products.splice(index, 1)[0];
+    return deletedProduct;
+  }
+}
+
+
+const productManager = new ProductManager();
+
+console.log(productManager.getProducts());
+
+const newProduct = productManager.addProduct({
+  title: "producto prueba",
+  description: "Este es un producto prueba",
+  price: 200,
+  thumbnail: "Sin imagen",
+  code: "abc123",
+  stock: 25,
+});
+
+console.log(productManager.getProducts());
+
+console.log(productManager.getProductById(newProduct.id));
+
+console.log(productManager.updateProduct(newProduct.id, { price: 250 }));
+
+console.log(productManager.deleteProduct(newProduct.id));
